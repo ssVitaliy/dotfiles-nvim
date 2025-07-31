@@ -1,5 +1,6 @@
-require 'core.options'
-require 'core.keymaps'
+require("core.options")
+require("core.keymaps")
+require("my-funcs.evalua_3").setup()
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
