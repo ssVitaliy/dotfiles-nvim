@@ -28,13 +28,7 @@ return {
 			-- See :h blink-cmp-config-keymap for defining your own keymap
 			keymap = { preset = "super-tab" },
 
-			appearance = {
-				-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-				-- Adjusts spacing to ensure icons are aligned
-				nerd_font_variant = "mono",
-			},
-
-			-- (Default) Only show the documentation popup when manually triggered
+			appearance = { nerd_font_variant = "mono" },
 			completion = { documentation = { auto_show = false } },
 
 			-- Default list of enabled providers defined so that you can extend it
@@ -57,6 +51,40 @@ return {
 			--
 			-- See the fuzzy documentation for more information
 			fuzzy = { implementation = "prefer_rust_with_warning" },
+
+			cmdline = {
+				enabled = true,
+				completion = {
+					menu = {
+						auto_show = true,
+					},
+				},
+
+				keymap = {
+					preset = "none",
+
+					["<Tab>"] = {
+						function(cmp)
+							if cmp.is_ghost_text_visible() and cmp.is_menu_visible() then
+								return cmp.accept()
+							end
+						end,
+						"show_and_insert",
+						"select_and_accept",
+					},
+					["<S-Tab>"] = { "show_and_insert", "select_prev" },
+
+					["<C-n>"] = { "select_next", "fallback" },
+					["<C-p>"] = { "select_prev", "fallback" },
+
+					["<C-y>"] = { "select_and_accept" },
+					["<C-e>"] = { "cancel" },
+
+					-- ["<C-space>"] = { "show", "fallback" },
+					-- ["<Right>"] = { "select_next", "fallback" },
+					-- ["<Left>"] = { "select_prev", "fallback" },
+				},
+			},
 		},
 		opts_extend = { "sources.default" },
 	},
