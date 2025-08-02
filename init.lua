@@ -1,6 +1,8 @@
 require("core.options")
 require("core.keymaps")
 require("my-funcs.evalua_3").setup()
+-- package.loaded["my_funcs.cd_to_file_dir"] = nil
+require("my-funcs.cd_to_file_dir").setup()
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
