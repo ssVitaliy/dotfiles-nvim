@@ -4,85 +4,89 @@ return {
 		branch = "master",
 		lazy = false,
 		build = ":TSUpdate",
-		-- init = function(plugin)
-		-- 	-- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
-		-- 	-- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
-		-- 	-- no longer trigger the **nvim-treesitter** module to be loaded in time.
-		-- 	-- Luckily, the only things that those plugins need are the custom queries, which we make available
-		-- 	-- during startup.
-		-- 	require("lazy.core.loader").add_to_rtp(plugin)
-		-- 	require("nvim-treesitter.query_predicates")
-		-- end,
-		-- cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
 		config = function()
-			local configs = require("nvim-treesitter.configs")
-			configs.setup({
+			require("nvim-treesitter.configs").setup({
 				auto_install = true,
 				ignore_install = {},
 				modules = {},
-
-				ensure_installed = {
-					"bash",
-					"c",
-					"diff",
-					"html",
-					"lua",
-					"luadoc",
-					"markdown",
-					"markdown_inline",
-					"printf",
-					"python",
-					"query",
-					"regex",
-					"toml",
-					"vim",
-					"vimdoc",
-					"xml",
-					"yaml",
-				},
 				sync_install = false,
+
+				-- stylua: ignore
+				ensure_installed = { "bash", "c", "diff", "html", "lua", "luadoc", "markdown", "markdown_inline",
+					"printf", "python", "query", "regex", "toml", "vim", "vimdoc", "xml", "yaml", },
+
 				highlight = { enable = true },
+
 				indent = { enable = true },
+
 				incremental_selection = {
 					enable = true,
 					keymaps = {
-						init_selection = "<C-space>",
-						node_incremental = "<C-space>",
-						scope_incremental = false,
-						node_decremental = "<bs>",
+						init_selection = "<leader>n",
+						node_incremental = "<leader>n",
+						node_decremental = "<leader>m",
+						scope_incremental = "<leader>ns",
 					},
 				},
+			})
+		end,
+	},
 
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		config = function()
+			require("nvim-treesitter.configs").setup({
 				textobjects = {
+					select = {
+						enable = true,
+						lookahead = true, -- Auto-jump backward
+						keymaps = {
+							-- Functions
+							["af"] = "@function.outer",
+							["if"] = "@function.inner",
+							-- Classes
+							["ac"] = "@class.outer",
+							["ic"] = "@class.inner",
+							-- Loops/blocks
+							["al"] = "@loop.outer",
+							["il"] = "@loop.inner",
+							["ab"] = "@block.outer",
+							["ib"] = "@block.inner",
+							-- Parameters
+							["ap"] = "@parameter.outer",
+							["ip"] = "@parameter.inner",
+							-- Comments
+							["a/"] = "@comment.outer",
+						},
+					},
+					swap = {
+						enable = true,
+						swap_next = { ["<leader>sn"] = "@parameter.inner" }, -- Swap with next parameter
+						swap_previous = { ["<leader>sp"] = "@parameter.inner" }, -- Swap with previous
+					},
 					move = {
 						enable = true,
+						set_jumps = false, -- Dont add to jumplist
 						goto_next_start = {
-							["]f"] = "@function.outer",
-							["]c"] = "@class.outer",
-							["]a"] = "@parameter.inner",
+							["]f"] = "@function.outer", -- Next function start
+							["]c"] = "@class.outer", -- Next class start
 						},
 						goto_next_end = {
-							["]F"] = "@function.outer",
-							["]C"] = "@class.outer",
-							["]A"] = "@parameter.inner",
+							["]F"] = "@function.outer", -- Next function end
+							["]C"] = "@class.outer", -- Next class end
 						},
 						goto_previous_start = {
-							["[f"] = "@function.outer",
-							["[c"] = "@class.outer",
-							["[a"] = "@parameter.inner",
+							["[f"] = "@function.outer", -- Previous function start
+							["[c"] = "@class.outer", -- Previous class start
 						},
 						goto_previous_end = {
-							["[F"] = "@function.outer",
-							["[C"] = "@class.outer",
-							["[A"] = "@parameter.inner",
+							["[F"] = "@function.outer", -- Previous function end
+							["[C"] = "@class.outer", -- Previous class end
 						},
 					},
 				},
 			})
 		end,
-		keys = {
-			{ "<c-space>", desc = "Increment Selection" },
-			{ "<bs>", desc = "Decrement Selection", mode = "x" },
-		},
 	},
 }
