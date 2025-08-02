@@ -5,6 +5,7 @@ vim.opt.encoding = "UTF-8"
 vim.opt.fileencoding = "utf-8"
 
 vim.o.shellcmdflag = "-c" -- Set up shell
+vim.o.shell = "C:/msys64/usr/bin/bash.exe"
 
 vim.g.mapleader = " " -- Set global <leader>
 vim.g.maplocalleader = " " -- Set local <leader>
