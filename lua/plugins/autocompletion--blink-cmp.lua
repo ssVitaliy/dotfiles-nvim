@@ -56,7 +56,7 @@ return {
 				enabled = true,
 				completion = {
 					menu = {
-						auto_show = true,
+						auto_show = false,
 					},
 				},
 
@@ -65,14 +65,14 @@ return {
 
 					["<Tab>"] = {
 						function(cmp)
-							if cmp.is_ghost_text_visible() and cmp.is_menu_visible() then
+							if cmp.is_ghost_text_visible() and not cmp.is_menu_visible() then
 								return cmp.accept()
 							end
 						end,
-						"show_and_insert",
+						"show",
 						"select_and_accept",
 					},
-					["<S-Tab>"] = { "show_and_insert", "select_prev" },
+					-- ["<S-Tab>"] = { "show_and_insert", "select_prev" },
 
 					["<C-n>"] = { "select_next", "fallback" },
 					["<C-p>"] = { "select_prev", "fallback" },
@@ -80,7 +80,7 @@ return {
 					["<C-y>"] = { "select_and_accept" },
 					["<C-e>"] = { "cancel" },
 
-					-- ["<C-space>"] = { "show", "fallback" },
+					-- ["<C-Space>"] = { "show", "fallback" },
 					-- ["<Right>"] = { "select_next", "fallback" },
 					-- ["<Left>"] = { "select_prev", "fallback" },
 				},
