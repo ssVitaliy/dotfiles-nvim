@@ -12,7 +12,7 @@ vim.o.shellxquote = ""
 vim.g.mapleader = " " -- Set global <leader>
 vim.g.maplocalleader = " " -- Set local <leader>
 
-vim.cmd.colorscheme("habamax")
+-- vim.cmd.colorscheme("habamax") -- not required, scheme apply with lazy plugin
 
 -- Basic settings
 vim.opt.number = true -- Line numbers
@@ -60,7 +60,7 @@ vim.o.signcolumn = "yes" -- Keep signcolumn on by default
 
 -- vim.o.updatetime = 250  -- Decrease update time
 
-vim.o.timeoutlen = 300 -- Decrease mapped sequence wait time
+vim.o.timeoutlen = 500 -- Decrease mapped sequence wait time
 
 vim.o.splitright = true -- Configure how new splits should be opened
 vim.o.splitbelow = true
