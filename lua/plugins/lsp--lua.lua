@@ -16,7 +16,7 @@ return {
 		},
 		config = function()
 			require("lspconfig").lua_ls.setup({
-				cmd = { "C:\\Users\\dimon\\home\\bin\\lua-language-server\\bin\\lua-language-server" },
+				cmd = { "C:\\Users\\dimon\\home\\bin\\lua-language-server\\bin\\lua-language-server.exe" },
 			})
 		end,
 	},
