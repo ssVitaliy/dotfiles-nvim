@@ -4,10 +4,12 @@ vim.cmd([[language en_US.UTF-8]])
 vim.opt.encoding = "UTF-8"
 vim.opt.fileencoding = "utf-8"
 
-vim.o.shellcmdflag = "-c" -- Set up shell
+-- Set up shell
+vim.o.shellcmdflag = "-c" -- "-ic" if need to load .bashrc
 vim.o.shell = "C:/msys64/usr/bin/bash.exe"
 vim.o.shellquote = ""
 vim.o.shellxquote = ""
+vim.o.shellslash = true
 
 vim.g.mapleader = " " -- Set global <leader>
 vim.g.maplocalleader = " " -- Set local <leader>
@@ -30,6 +32,17 @@ vim.opt.expandtab = false -- Use spaces instead of tabs
 vim.opt.smartindent = true -- Smart auto-indenting
 vim.opt.autoindent = true -- Copy indent from current line
 
+-- Formatter
+-- Dont insert leader comment when press 'o O Enter'
+-- r: Controls automatic comment leader insertion when you press Enter in Insert mode.
+-- o: Controls automatic comment leader insertion when you press o or O in Normal mode to open a new line.
+vim.opt.formatoptions:remove({ "o", "r" })
+vim.api.nvim_create_autocmd("FileType", {
+	callback = function()
+		vim.opt_local.formatoptions:remove("o")
+	end,
+})
+
 -- Search settings
 vim.opt.ignorecase = true -- Case insensitive search
 vim.opt.smartcase = true -- Case sensitive if uppercase in search
@@ -37,7 +50,6 @@ vim.opt.hlsearch = true -- highlight search results
 vim.opt.incsearch = true -- Show matches as you type
 
 vim.o.autochdir = false -- Auto change dir
-
 vim.o.mouse = "a" -- Enable mouse mode
 
 -- netrw
@@ -45,35 +57,16 @@ vim.g.netrw_banner = 0 -- turn off the banner in Netrw
 vim.g.netrw_liststyle = 3 -- Tree-style listing
 -- vim.g.netrw_winsize = 30 -- Window width when opening in vertical split
 
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  See `:help 'clipboard'`
--- vim.schedule(function()
--- 	vim.o.clipboard = "unnamedplus"
--- end)
-
 vim.o.breakindent = true -- Enable break indent
-
--- vim.o.undofile = true  -- Save undo history
-
+vim.o.undofile = true -- Save undo history
 vim.o.signcolumn = "yes" -- Keep signcolumn on by default
-
 -- vim.o.updatetime = 250  -- Decrease update time
-
 vim.o.timeoutlen = 500 -- Decrease mapped sequence wait time
 
 vim.o.splitright = true -- Configure how new splits should be opened
 vim.o.splitbelow = true
 
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
---
---  Notice listchars is set using `vim.opt` instead of `vim.o`.
---  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
---   See `:help lua-options`
---   and `:help lua-options-guide`
-vim.o.list = false
+vim.o.list = false -- Display whitespaces
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 vim.o.inccommand = "split" -- Preview substitutions live, as you type!
@@ -82,3 +75,14 @@ vim.o.inccommand = "split" -- Preview substitutions live, as you type!
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Highlight when yanking (copying) text
+--  Try it with `yap` in normal mode
+--  See `:help vim.hl.on_yank()`
+vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight when yanking (copying) text",
+	group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+	callback = function()
+		vim.hl.on_yank()
+	end,
+})
