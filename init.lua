@@ -3,6 +3,8 @@ require("keymaps")
 require("funcs.evalua_3").setup()
 -- package.loaded["funcs.cd_to_file_dir"] = nil
 require("funcs.cd_to_file_dir").setup()
+require("lsp.lua_ls")
+require("lsp.pyright")
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
