@@ -6,6 +6,8 @@ return {
 			local actions = require("diffview.actions")
 			local diffview = require("diffview")
 			diffview.setup({
+				use_icons = false,
+
 				view = {
 					default = {
 						-- Config for changed files, and staged files in diff views.
