@@ -22,10 +22,10 @@ return {
 				incremental_selection = {
 					enable = true,
 					keymaps = {
-						init_selection = "<leader>n",
-						node_incremental = "<leader>n",
-						node_decremental = "<leader>m",
-						scope_incremental = "<leader>ns",
+						init_selection = "<leader>m",
+						node_incremental = "<leader>m",
+						node_decremental = "<leader>l",
+						scope_incremental = "<leader>ms",
 					},
 				},
 			})
@@ -71,6 +71,7 @@ return {
 						goto_next_start = {
 							["]f"] = "@function.outer", -- Next function start
 							["]c"] = "@class.outer", -- Next class start
+							["]]"] = "@parameter.inner", -- Next parameter
 						},
 						goto_next_end = {
 							["]F"] = "@function.outer", -- Next function end
@@ -79,6 +80,7 @@ return {
 						goto_previous_start = {
 							["[f"] = "@function.outer", -- Previous function start
 							["[c"] = "@class.outer", -- Previous class start
+							["[["] = "@parameter.inner", -- Previous parameter
 						},
 						goto_previous_end = {
 							["[F"] = "@function.outer", -- Previous function end
