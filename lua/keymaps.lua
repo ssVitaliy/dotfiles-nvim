@@ -18,6 +18,11 @@ vim.keymap.set("i", "<C-j>", "<C-o>o", { desc = "I goto new line" })
 -- Navigation
 vim.keymap.set("n", "<leader>n", ":Navbuddy<CR>", { desc = "Navbuddy" })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>ok", ":e ~/.config/nvim/lua/keymaps.lua<CR>", { desc = "Configs" })
+
+--Sessions
+vim.keymap.set("n", "<leader>qs", ":mks! .mks |:qa<CR>", { desc = "QuitAll with save session" })
+vim.keymap.set("n", "<leader>ql", ":source .mks<CR>", { desc = "Load session if .mks exists" })
 
 -- middle coded
 vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Write current file" })
