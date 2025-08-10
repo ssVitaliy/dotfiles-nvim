@@ -17,6 +17,7 @@ vim.keymap.set("i", "<C-j>", "<C-o>o", { desc = "I goto new line" })
 
 -- Navigation
 vim.keymap.set("n", "<leader>n", ":Navbuddy<CR>", { desc = "Navbuddy" })
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 
 -- middle coded
 vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Write current file" })
