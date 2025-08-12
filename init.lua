@@ -8,3 +8,5 @@ require("lsp.lua_ls")
 require("lsp.pyright")
 
 require("funcs.daily_tips_funcs")
+-- python spec
+require("custom.py-autosave")
