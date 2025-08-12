@@ -26,7 +26,7 @@ vim.keymap.set("n", "<leader>qs", ":mks! .mks |:qa<CR>", { desc = "QuitAll with 
 vim.keymap.set("n", "<leader>ql", ":source .mks<CR>", { desc = "Load session if .mks exists" })
 
 -- middle coded
-vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Write current file" })
+vim.keymap.set("n", "<leader>wf", ":w<CR>", { desc = "Write current file" })
 vim.keymap.set("n", "<leader>ad", ":DiffviewOpen<CR>", { desc = "Diffview Open" })
 vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete to nil" })
 
