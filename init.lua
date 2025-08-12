@@ -10,3 +10,4 @@ require("lsp.pyright")
 require("funcs.daily_tips_funcs")
 -- python spec
 require("custom.py-autosave")
+require("custom.send-py-term").setup()
