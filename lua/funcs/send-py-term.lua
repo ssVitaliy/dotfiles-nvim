@@ -82,4 +82,24 @@ function M.send_bounded()
 	end
 end
 
+function M.setup()
+	-- Keymap only for Python buffers
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "python",
+		callback = function()
+			vim.keymap.set("n", "<leader>el", function()
+				M.send_line()
+			end, { desc = "py line" })
+
+			vim.keymap.set("n", "<leader>ev", function()
+				M.send_selected()
+			end, { desc = "py selected" })
+
+			vim.keymap.set("n", "<leader>eb", function()
+				M.send_bounded()
+			end, { desc = "py bounded" })
+		end,
+	})
+end
+
 return M
