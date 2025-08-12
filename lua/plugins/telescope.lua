@@ -78,22 +78,22 @@ return {
 		local builtin = require("telescope.builtin")
 
 		-- Find files
-		vim.keymap.set("n", "<leader>ff", function()
+		vim.keymap.set("n", "<leader>oo", function()
 			builtin.find_files(common_vert)
 		end, { desc = "Find files" })
 
 		-- Live grep
-		vim.keymap.set("n", "<leader>fg", function()
+		vim.keymap.set("n", "<leader>og", function()
 			builtin.live_grep(common_vert)
 		end, { desc = "Live grep" })
 
 		-- Buffers
-		vim.keymap.set("n", "<leader>fb", function()
+		vim.keymap.set("n", "<leader>ob", function()
 			builtin.buffers(common_vert)
 		end, { desc = "Find buffers" })
 
 		-- Find help tags
-		vim.keymap.set("n", "<leader>fh", function()
+		vim.keymap.set("n", "<leader>oh", function()
 			builtin.help_tags(common_vert)
 		end, { desc = "Find help" })
 
