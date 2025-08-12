@@ -14,18 +14,19 @@ vim.keymap.set("n", "<leader>tc", ":tabc<CR>", { desc = "Close tab" })
 vim.keymap.set("i", "<C-o>", "<C-o>A", { desc = "I goto line end" })
 vim.keymap.set("i", "<C-i>", "<C-o>^", { desc = "I goto firts char" })
 vim.keymap.set("i", "<C-j>", "<C-o>o", { desc = "I goto new line" })
+vim.keymap.set("i", "<C-d>", "<Del>", { desc = "i del previous" })
 
 -- Navigation
 vim.keymap.set("n", "<leader>n", ":Navbuddy<CR>", { desc = "Navbuddy" })
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>ok", ":e ~/.config/nvim/lua/keymaps.lua<CR>", { desc = "Configs" })
+vim.keymap.set("n", "<leader>ok", ":tabe ~/.config/nvim/lua/keymaps.lua<CR>", { desc = "Configs" })
 
 --Sessions
 vim.keymap.set("n", "<leader>qs", ":mks! .mks |:qa<CR>", { desc = "QuitAll with save session" })
 vim.keymap.set("n", "<leader>ql", ":source .mks<CR>", { desc = "Load session if .mks exists" })
 
 -- middle coded
-vim.keymap.set("n", "<leader>w", ":w<CR>", { desc = "Write current file" })
+vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Write current file" })
 vim.keymap.set("n", "<leader>ad", ":DiffviewOpen<CR>", { desc = "Diffview Open" })
 vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete to nil" })
 
