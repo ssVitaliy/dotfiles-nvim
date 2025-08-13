@@ -1,6 +1,6 @@
 return {
-	"rebelot/kanagawa.nvim",
+	"ssVitaliy/alabaster-mod.nvim",
 	config = function()
-		vim.cmd.colorscheme("kanagawa")
+		vim.cmd.colorscheme("alabaster-mod")
 	end,
 }
