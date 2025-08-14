@@ -82,6 +82,10 @@ function M.send_bounded()
 	end
 end
 
+function M.send_whole_file()
+	term_send_line("python " .. vim.fn.expand("%:p"))
+end
+
 function M.setup()
 	-- Keymap only for Python buffers
 	vim.api.nvim_create_autocmd("FileType", {
@@ -98,6 +102,11 @@ function M.setup()
 			vim.keymap.set("n", "<leader>eb", function()
 				M.send_bounded()
 			end, { buffer = args.buf, desc = "py bounded" })
+
+			vim.keymap.set("n", "<leader>ef", function()
+				vim.cmd("w")
+				M.send_whole_file()
+			end, { buffer = args.buf, desc = "PY whole file" })
 		end,
 	})
 end
