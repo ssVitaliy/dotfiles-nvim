@@ -115,6 +115,13 @@ return {
 			builtin.help_tags(adjust_anchor(vert_comp))
 		end, { desc = "Find help" })
 
+		-- Noteman search
+		local noteman_opts = vim.tbl_deep_extend("force", vert_comp, { search_dirs = { "~/noteman" } })
+
+		vim.keymap.set("n", "<leader>on", function()
+			builtin.live_grep(noteman_opts)
+		end, { desc = "Noteman search" })
+
 		-- vim.keymap.set("n", "<leader>of", builtin.find_files, { desc = "Telescope find files" })
 		-- vim.keymap.set("n", "<leader>og", builtin.live_grep, { desc = "Telescope live grep" })
 		-- vim.keymap.set("n", "<leader>oo", builtin.buffers, { desc = "Telescope buffers" })
