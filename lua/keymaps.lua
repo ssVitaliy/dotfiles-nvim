@@ -1,3 +1,4 @@
+vim.keymap.set("n", "<leader>gh", '"hyiw:h <C-r>h<CR>')
 -- hard coded keys
 vim.keymap.set("i", "jk", "<ESC>") -- Use 'jk' to exit from INSERT mode
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true }) -- Turn off search highlight
@@ -30,8 +31,9 @@ vim.keymap.set("n", "<leader>wf", ":w<CR>", { desc = "Write current file" })
 vim.keymap.set("n", "<leader>ad", ":DiffviewOpen<CR>", { desc = "Diffview Open" })
 vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete to nil" })
 
--- temporary
+-- Eval in Lua
 vim.keymap.set("n", "<leader>el", ":.lua<CR>", { desc = "Eval one line in lua" })
+vim.keymap.set("v", "<leader>el", ":lua<CR>", { desc = "Eval selection in lua" })
 vim.keymap.set("n", "<leader>ea", ":%lua<CR>", { desc = "Eval entire buffer" })
 
 -- vim.keymap.set("n", "<leader>t", ":30Vex!<CR>", { desc = "Left side Explorer" })
