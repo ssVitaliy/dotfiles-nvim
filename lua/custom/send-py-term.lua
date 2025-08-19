@@ -154,7 +154,7 @@ function M.setup()
 				M.send_line()
 			end, { buffer = args.buf, desc = "py line" })
 
-			vim.keymap.set("n", "<leader>ev", function()
+			vim.keymap.set({ "n", "v" }, "<leader>ev", function()
 				M.send_selected()
 			end, { buffer = args.buf, desc = "py selected" })
 
