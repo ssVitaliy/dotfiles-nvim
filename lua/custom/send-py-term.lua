@@ -137,7 +137,15 @@ function M.send_whole_file()
 	term_send_one_line("python " .. vim.fn.expand("%:p"))
 end
 
+function M.set_pane_id(args)
+	M.config.pane_id = tonumber(args.fargs[1])
+	print("Config done. Target buffer =", M.config.pane_id)
+end
+
 function M.setup()
+	-- add command
+	vim.api.nvim_create_user_command("SendPyTermBuffer", M.set_pane_id, { nargs = 1 })
+
 	-- Keymap only for Python buffers
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "python",
