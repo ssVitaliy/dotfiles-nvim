@@ -120,17 +120,7 @@ function M.send_line()
 end
 
 function M.send_bounded()
-	-- term_send_lines(prepare_lines(get_bounded_lines()))
-
-	local bounds = get_bounded_lines()
-	for _, line in ipairs(bounds) do
-		print(line)
-	end
-	print("len bounds:", #bounds)
-	local prepared = prepare_lines(bounds)
-	print(prepared)
-
-	term_send_lines(prepared)
+	term_send_lines(prepare_lines(get_bounded_lines()))
 end
 
 function M.send_whole_file()
