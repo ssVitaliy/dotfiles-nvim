@@ -6,3 +6,5 @@ require("funcs.cd_to_file_dir").setup()
 require("lazy-init")
 require("lsp.lua_ls")
 require("lsp.pyright")
+
+require("funcs.daily_tips_funcs")
