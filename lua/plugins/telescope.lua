@@ -54,12 +54,16 @@ return {
 				},
 			},
 
-			-- pickers = {
-			-- find_files = { theme = "dropdown" },
-			-- 	live_grep = { theme = "dropdown" },
-			-- 	buffers = { theme = "dropdown" },
-			-- 	help_tags = { theme = "dropdown" },
-			-- },
+			pickers = {
+				live_grep = {
+					mappings = {
+						i = { ["<c-f>"] = require("telescope.actions").to_fuzzy_refine },
+					},
+				},
+				-- find_files = { theme = "dropdown" },
+				-- buffers = { theme = "dropdown" },
+				-- 	help_tags = { theme = "dropdown" },
+			},
 		})
 
 		--=== fix win backslash problem for help files search
