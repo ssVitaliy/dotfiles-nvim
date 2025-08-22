@@ -3,6 +3,14 @@ vim.keymap.set("n", "<leader>gh", '"hyiw:h <C-r>h<CR>')
 vim.keymap.set("i", "jk", "<ESC>") -- Use 'jk' to exit from INSERT mode
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true }) -- Turn off search highlight
 
+-- Text Editor
+vim.keymap.set(
+	"n",
+	"<leader>aeu",
+	':lua vim.fn.append(vim.fn.getpos(".")[2], string.rep("-", #vim.api.nvim_get_current_line()))<CR>',
+	{ desc = "Underline" }
+)
+
 -- Yank to / paste from register 't'
 vim.keymap.set({ "n", "v" }, "<leader>y", '"*y', { desc = "Yank to clipboard" })
 vim.keymap.set("n", "<leader>p", '"*p', { desc = "Paste from clipboard" })
