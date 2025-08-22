@@ -18,7 +18,7 @@ vim.g.maplocalleader = " " -- Set local <leader>
 
 -- Basic settings
 vim.opt.number = true -- Line numbers
-vim.opt.relativenumber = true -- Relative line numbers
+vim.opt.relativenumber = false -- Relative line numbers
 vim.opt.cursorline = true -- Highlight current line
 vim.opt.wrap = false -- Don't wrap lines
 vim.opt.scrolloff = 8 -- Keep 10 lines above/below cursor
