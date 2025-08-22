@@ -32,6 +32,11 @@ vim.opt.expandtab = false -- Use spaces instead of tabs
 vim.opt.smartindent = true -- Smart auto-indenting
 vim.opt.autoindent = true -- Copy indent from current line
 
+-- Folds
+vim.opt.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldenable = false
+
 -- Formatter
 -- Dont insert leader comment when press 'o O Enter'
 -- r: Controls automatic comment leader insertion when you press Enter in Insert mode.
