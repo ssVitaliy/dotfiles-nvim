@@ -54,8 +54,8 @@ return {
 							["ab"] = "@block.outer",
 							["ib"] = "@block.inner",
 							-- Parameters
-							["ap"] = "@parameter.outer",
-							["ip"] = "@parameter.inner",
+							["aa"] = "@parameter.outer",
+							["ia"] = "@parameter.inner",
 							-- Comments
 							["a/"] = "@comment.outer",
 						},
