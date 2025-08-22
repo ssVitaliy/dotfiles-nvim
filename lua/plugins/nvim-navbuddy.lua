@@ -12,8 +12,8 @@ return {
 				border = "single", -- "rounded", "double", "solid", "none"
 				-- or an array with eight chars building up the border in a clockwise fashion
 				-- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
-				size = { height = "80%", width = "50%" }, -- Or table format example: { height = "40%", width = "100%"}
-				position = { row = "2%", col = "100%" }, -- Or table format example: { row = "100%", col = "0%"}
+				size = { height = "50%", width = "50%" }, -- Or table format example: { height = "40%", width = "100%"}
+				position = { row = "50%", col = "100%" }, -- Or table format example: { row = "100%", col = "0%"}
 				scrolloff = nil, -- scrolloff value within navbuddy window
 				sections = {
 					left = {
