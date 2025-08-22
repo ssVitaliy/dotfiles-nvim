@@ -100,29 +100,29 @@ return {
 		local builtin = require("telescope.builtin")
 
 		-- Find files
-		vim.keymap.set("n", "<leader>oo", function()
+		vim.keymap.set("n", "<leader>lk", function()
 			builtin.find_files(adjust_anchor(vert_comp))
 		end, { desc = "Find files" })
 
 		-- Live grep
-		vim.keymap.set("n", "<leader>og", function()
+		vim.keymap.set("n", "<leader>ll", function()
 			builtin.live_grep(adjust_anchor(vert_comp))
 		end, { desc = "Live grep" })
 
 		-- Buffers
-		vim.keymap.set("n", "<leader>ob", function()
+		vim.keymap.set("n", "<leader>lj", function()
 			builtin.buffers(adjust_anchor(vert_comp))
 		end, { desc = "Find buffers" })
 
 		-- Find help tags
-		vim.keymap.set("n", "<leader>oh", function()
+		vim.keymap.set("n", "<leader>lh", function()
 			builtin.help_tags(adjust_anchor(vert_comp))
 		end, { desc = "Find help" })
 
 		-- Noteman search
 		local noteman_opts = vim.tbl_deep_extend("force", vert_comp, { search_dirs = { "~/noteman" } })
 
-		vim.keymap.set("n", "<leader>on", function()
+		vim.keymap.set("n", "<leader>ln", function()
 			builtin.live_grep(noteman_opts)
 		end, { desc = "Noteman search" })
 
