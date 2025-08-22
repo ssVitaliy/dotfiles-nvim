@@ -2,7 +2,7 @@
 vim.keymap.set("n", "<leader>acd", ":Cdf<CR>", { desc = "cd to current buff path" })
 vim.keymap.set("n", "<leader>c", "gcc", { remap = true, desc = "Comment line" })
 vim.keymap.set("v", "<leader>c", [[mpgc'p]], { remap = true, desc = "Comment selection" })
-vim.keymap.set("n", "<leader>gh", '"hyiw:h <C-r>h<CR>')
+vim.keymap.set("n", "<leader>gh", '"hyiw:h <C-r>h<CR>', { desc = "Help word under cursor" })
 
 -- hard coded keys
 vim.keymap.set("i", "jk", "<ESC>") -- Use 'jk' to exit from INSERT mode
