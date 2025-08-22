@@ -1,4 +1,9 @@
+-- experimental stuff
+vim.keymap.set("n", "<leader>acd", ":Cdf<CR>", { desc = "cd to current buff path" })
+vim.keymap.set("n", "<leader>c", "gcc", { remap = true, desc = "Comment line" })
+vim.keymap.set("v", "<leader>c", [[mpgc'p]], { remap = true, desc = "Comment selection" })
 vim.keymap.set("n", "<leader>gh", '"hyiw:h <C-r>h<CR>')
+
 -- hard coded keys
 vim.keymap.set("i", "jk", "<ESC>") -- Use 'jk' to exit from INSERT mode
 vim.keymap.set("n", "<Esc>", ":nohlsearch<CR>", { silent = true }) -- Turn off search highlight
@@ -46,8 +51,7 @@ vim.keymap.set("n", "<leader>ea", ":%lua<CR>", { desc = "Eval entire buffer" })
 
 -- vim.keymap.set("n", "<leader>t", ":30Vex!<CR>", { desc = "Left side Explorer" })
 vim.keymap.set("n", "<leader>`", ":Neogit<CR>", { desc = "open neoGit" })
-
-vim.keymap.set("n", "<leader>'", vim.diagnostic.open_float, { desc = "Diag message" })
+vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, { desc = "Diag message float" })
 
 -- Move lines up/down
 vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
