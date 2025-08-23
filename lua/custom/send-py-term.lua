@@ -4,7 +4,7 @@ local M = {}
 -- vim.fn.systemlist('wezterm cli send-text --pane-id 1 --no-paste "n\'i"')
 
 M.config = {}
-M.config.pane_id = 1
+M.config.pane_id = nil
 local buff_id = 0
 local anchor = "#-"
 
@@ -105,6 +105,87 @@ local function get_selected_lines()
 	return vim.api.nvim_buf_get_lines(buff_id, start_line, end_line, false)
 end
 
+-- Pane control funcs: find, create pane
+
+local function run_wezterm_command(cmd)
+	local full_cmd = "wezterm " .. cmd
+	local result = vim.fn.system(full_cmd)
+
+	if vim.v.shell_error ~= 0 then
+		vim.notify("Wezterm command failed: " .. full_cmd, vim.log.levels.ERROR)
+		return nil
+	end
+
+	return result
+end
+
+local function get_non_active_pane_ids_list()
+	local result = run_wezterm_command("cli list --format json")
+	if not result then
+		return nil
+	end
+
+	local ok, panes = pcall(vim.json.decode, result)
+	if not ok then
+		return nil
+	end
+
+	local non_active_panes = {}
+
+	for _, pane in ipairs(panes) do
+		if not pane.is_active then
+			table.insert(non_active_panes, pane.pane_id)
+		end
+	end
+
+	return #non_active_panes > 0 and non_active_panes or nil
+end
+
+local function find_pypane(pane_ids_list)
+	if type(pane_ids_list) ~= "table" or #pane_ids_list == 0 then
+		return nil
+	end
+
+	for _, pane_id in ipairs(pane_ids_list) do
+		local pane_text = run_wezterm_command(string.format("cli get-text --pane-id %d", pane_id))
+
+		if pane_text then
+			local cleaned = pane_text:gsub("%s*$", "")
+			if #cleaned >= 3 and cleaned:sub(-3, -1) == ">>>" then
+				return tonumber(pane_id)
+			end
+		end
+	end
+	return nil
+end
+
+local function create_pypane()
+	local current_dir = vim.fn.getcwd()
+	local cmd = string.format([[cli split-pane --percent 30 --cwd %s]], current_dir)
+	local pane_id = run_wezterm_command(cmd)
+	if pane_id then
+		return tonumber(pane_id)
+	end
+	return nil
+end
+
+local function get_pypane()
+	local pane_id = find_pypane(get_non_active_pane_ids_list())
+	if pane_id then
+		return pane_id
+	end
+
+	pane_id = create_pypane()
+
+	if pane_id then
+		-- try to activate venv
+		local cmd = string.format([[cli send-text --pane-id %d "source .venv/Scripts/activate"]], pane_id)
+		run_wezterm_command(cmd)
+		return pane_id
+	end
+	return nil
+end
+
 -- GOOD
 function M.send_selected()
 	local lines = get_selected_lines()
@@ -128,18 +209,25 @@ function M.send_whole_file()
 end
 
 function M.set_pane_id(args)
-	M.config.pane_id = tonumber(args.fargs[1])
+	M.config.pane_id = nil
+	if args and #args.fargs == 1 then
+		M.config.pane_id = tonumber(args.fargs[1])
+	elseif not args or #args.fargs == 0 then
+		M.config.pane_id = get_pypane()
+	end
 	print("Config done. Target buffer =", M.config.pane_id)
 end
 
 function M.setup()
 	-- add command
-	vim.api.nvim_create_user_command("SendPyTermBuffer", M.set_pane_id, { nargs = 1 })
+	vim.api.nvim_create_user_command("SendPyTermBuffer", M.set_pane_id, { nargs = "?" })
 
 	-- Keymap only for Python buffers
 	vim.api.nvim_create_autocmd("FileType", {
 		pattern = "python",
 		callback = function(args)
+			vim.keymap.set("n", "<F5>", M.set_pane_id, { buffer = args.buf, desc = "py line" })
+
 			vim.keymap.set("n", "<leader>el", function()
 				M.send_line()
 			end, { buffer = args.buf, desc = "py line" })
