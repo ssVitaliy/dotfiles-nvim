@@ -233,9 +233,9 @@ function M.setup()
 
 			vim.keymap.set("v", "<leader>er", M.send_selected, { buffer = args.buf, desc = "py Eval selected Range" })
 
-			vim.keymap.set("n", "<leader>eb", function()
+			vim.keymap.set("n", "<leader>er", function()
 				M.send_bounded()
-			end, { buffer = args.buf, desc = "py bounded" })
+			end, { buffer = args.buf, desc = "py Eval bounded Range" })
 
 			vim.keymap.set("n", "<leader>ef", function()
 				vim.cmd("w")
