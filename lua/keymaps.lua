@@ -1,3 +1,5 @@
+vim.keymap.set("n", "<leader>k", "V", { remap = true, desc = "Visual line selection" })
+
 -- experimental stuff
 vim.keymap.set("n", "<leader>acd", ":Cdf<CR>", { desc = "cd to current buff path" })
 vim.keymap.set("n", "<leader>c", "gcc", { remap = true, desc = "Comment line" })
@@ -32,7 +34,7 @@ vim.keymap.set("i", "<C-d>", "<Del>", { desc = "i del previous" })
 
 -- Navigation
 vim.keymap.set("n", "<leader>n", ":Navbuddy<CR>", { desc = "Navbuddy" })
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "_", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 vim.keymap.set("n", "<leader>ok", ":tabe ~/.config/nvim/lua/keymaps.lua<CR>", { desc = "Configs" })
 
 --Sessions
