@@ -10,6 +10,7 @@ return {
 				ignore_install = {},
 				modules = {},
 				sync_install = false,
+				folds = { enable = true },
 
 				-- stylua: ignore
 				ensure_installed = { "bash", "c", "diff", "html", "lua", "luadoc", "markdown", "markdown_inline",

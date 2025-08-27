@@ -34,8 +34,10 @@ vim.opt.autoindent = true -- Copy indent from current line
 
 -- Folds
 vim.opt.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldenable = false
+vim.o.foldlevelstart = 99
+-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 
 -- Formatter
 -- Dont insert leader comment when press 'o O Enter'
