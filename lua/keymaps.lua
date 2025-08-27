@@ -1,4 +1,5 @@
 vim.keymap.set("n", "<leader>k", "V", { remap = true, desc = "Visual line selection" })
+vim.keymap.set("n", "<leader>bd", ":bd<CR>", { desc = "Buffer Delete" })
 
 -- experimental stuff
 vim.keymap.set("n", "<leader>acd", ":Cdf<CR>", { desc = "cd to current buff path" })
