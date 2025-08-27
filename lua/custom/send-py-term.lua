@@ -97,14 +97,6 @@ local function term_send_lines(lines)
 	end
 end
 
--- GOOD
-local function get_selected_lines()
-	local start_line = vim.fn.getpos("'<")[2] - 1
-	local end_line = vim.fn.getpos("'>")[2]
-
-	return vim.api.nvim_buf_get_lines(buff_id, start_line, end_line, false)
-end
-
 -- Pane control funcs: find, create pane
 
 local function run_wezterm_command(cmd)
@@ -188,9 +180,16 @@ end
 
 -- GOOD
 function M.send_selected()
-	local lines = get_selected_lines()
-	lines = prepare_lines(lines)
-	term_send_lines(lines)
+	local start_line = vim.fn.getpos("v")[2] - 1
+	local end_line = vim.fn.getpos(".")[2]
+
+	-- Ensure correct order
+	if start_line > end_line then
+		start_line, end_line = end_line, start_line
+	end
+
+	local lines = vim.api.nvim_buf_get_lines(buff_id, start_line, end_line, false)
+	term_send_lines(prepare_lines(lines))
 end
 
 -- GOOD
@@ -232,9 +231,7 @@ function M.setup()
 				M.send_line()
 			end, { buffer = args.buf, desc = "py line" })
 
-			vim.keymap.set({ "n", "v" }, "<leader>ev", function()
-				M.send_selected()
-			end, { buffer = args.buf, desc = "py selected" })
+			vim.keymap.set("v", "<leader>er", M.send_selected, { buffer = args.buf, desc = "py Eval selected Range" })
 
 			vim.keymap.set("n", "<leader>eb", function()
 				M.send_bounded()
