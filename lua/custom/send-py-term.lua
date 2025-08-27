@@ -195,7 +195,7 @@ end
 
 -- GOOD
 function M.send_line()
-	local line = vim.api.nvim_get_current_line()
+	local line = vim.api.nvim_get_current_line():match("%S+.*")
 	term_send_one_line(line)
 	print("line sended")
 end
