@@ -203,10 +203,6 @@ function M.send_bounded()
 	term_send_lines(prepare_lines(get_bounded_lines()))
 end
 
-function M.send_whole_file()
-	term_send_one_line("python " .. vim.fn.expand("%:p"))
-end
-
 function M.set_pane_id(args)
 	M.config.pane_id = nil
 	if args and #args.fargs == 1 then
@@ -215,6 +211,120 @@ function M.set_pane_id(args)
 		M.config.pane_id = get_pypane()
 	end
 	print("Config done. Target buffer =", M.config.pane_id)
+end
+
+local function run_python_to_split()
+	-- Create a vertical split with buffer named "pyout"
+	-- Append each run's output with timestamp and filename headers
+	-- Maintain the buffer across multiple runs
+	-- Scroll to the bottom automatically
+	-- Return focus to original window
+	--
+	-- Start with python as default
+	-- Check each path in the list for existence
+	-- Use the first one that exists
+	-- Break out of the loop once found
+
+	local current_file = vim.fn.expand("%:p")
+	local python_exec = "python"
+	local python_path_list = { "./.venv/bin/python", "./.venv/Scripts/python.exe" }
+
+	for _, path in ipairs(python_path_list) do
+		if vim.fn.filereadable(path) == 1 then
+			python_exec = path
+			break
+		end
+	end
+	local output = vim.fn.system(python_exec .. " '" .. current_file .. "'")
+
+	-- Find or create pyout buffer
+	local buf_handle = nil
+	local win_handle = nil
+
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		local buf_name = vim.api.nvim_buf_get_name(buf)
+		if string.find(buf_name, "pyout") then
+			buf_handle = buf
+			break
+		end
+	end
+
+	if not buf_handle then
+		-- Create new vertical split
+		vim.api.nvim_command("vsplit")
+		buf_handle = vim.api.nvim_create_buf(false, true) -- create scratch buffer
+		win_handle = vim.api.nvim_get_current_win()
+
+		-- Set buffer options
+		vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf_handle })
+		vim.api.nvim_set_option_value("bufhidden", "hide", { buf = buf_handle })
+		vim.api.nvim_set_option_value("swapfile", false, { buf = buf_handle })
+		vim.api.nvim_set_option_value("filetype", "text", { buf = buf_handle })
+
+		vim.api.nvim_buf_set_name(buf_handle, "pyout")
+		vim.api.nvim_win_set_buf(win_handle, buf_handle)
+	else
+		-- Find window showing this buffer or create one
+		local found_win = nil
+		for _, win in ipairs(vim.api.nvim_list_wins()) do
+			if vim.api.nvim_win_get_buf(win) == buf_handle then
+				found_win = win
+				break
+			end
+		end
+
+		if found_win then
+			vim.api.nvim_set_current_win(found_win)
+			win_handle = found_win
+		else
+			vim.api.nvim_command("vsplit")
+			win_handle = vim.api.nvim_get_current_win()
+			vim.api.nvim_win_set_buf(win_handle, buf_handle)
+		end
+	end
+
+	-- Get current content and prepare new output
+	local current_lines = vim.api.nvim_buf_get_lines(buf_handle, 0, -1, false)
+	local new_lines = {}
+
+	-- Add separator if not empty
+	if #current_lines > 0 and current_lines[#current_lines] ~= "" then
+		table.insert(new_lines, "")
+		table.insert(
+			new_lines,
+			"─── "
+				.. os.date("%H:%M:%S")
+				.. " ─── "
+				.. vim.fn.fnamemodify(current_file, ":t")
+				.. " ───"
+		)
+		table.insert(new_lines, "")
+	else
+		table.insert(
+			new_lines,
+			"─── "
+				.. os.date("%H:%M:%S")
+				.. " ─── "
+				.. vim.fn.fnamemodify(current_file, ":t")
+				.. " ───"
+		)
+		table.insert(new_lines, "")
+	end
+
+	-- Add the actual output
+	for _, line in ipairs(vim.split(output, "\n")) do
+		table.insert(new_lines, line)
+	end
+
+	-- Append to buffer
+	vim.api.nvim_buf_set_lines(buf_handle, -1, -1, false, new_lines)
+
+	-- Move cursor to end and ensure window is scrolled to bottom
+	local last_line = vim.api.nvim_buf_line_count(buf_handle)
+	vim.api.nvim_win_set_cursor(win_handle, { last_line, 0 })
+
+	-- Return to original window
+	vim.api.nvim_command("wincmd p")
 end
 
 function M.setup()
@@ -239,8 +349,8 @@ function M.setup()
 
 			vim.keymap.set("n", "<leader>ef", function()
 				vim.cmd("w")
-				M.send_whole_file()
-			end, { buffer = args.buf, desc = "PY whole file" })
+				run_python_to_split()
+			end, { buffer = args.buf, desc = "py Eval whole File" })
 		end,
 	})
 end
