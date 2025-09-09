@@ -62,10 +62,9 @@ local function prepare_lines(lines)
 
 	for i = block_start, #lines do
 		local line = lines[i]
-		-- break on lines with something on indent area
-		if line:sub(1, effective_line_pos - 1):find("[^%s]") then
-			break
-		else
+		-- skip empty lines
+		-- skip lines with something on indent area
+		if line:find("%S") and not line:sub(1, effective_line_pos - 1):find("[^%s]") then
 			table.insert(result_lines, line:sub(effective_line_pos, -1))
 		end
 	end
