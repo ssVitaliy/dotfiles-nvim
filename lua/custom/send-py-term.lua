@@ -6,7 +6,7 @@ local M = {}
 M.config = {}
 M.config.pane_id = nil
 local buff_id = 0
-local anchor = "#-"
+local anchor = "##"
 
 -- NICE but need in optimization
 -- Now we get whole buffer. This method not optimal, if buffer have many lines (>200).
