@@ -8,6 +8,7 @@ require("lsp.lua_ls")
 require("lsp.pyright")
 -- require("lsp.jedi")
 require("lsp.clangd")
+require("lsp.typescript")
 
 require("funcs.daily_tips_funcs")
 -- python spec
