@@ -18,6 +18,7 @@ vim.keymap.set(
 	':lua vim.fn.append(vim.fn.getpos(".")[2], string.rep("-", #vim.api.nvim_get_current_line()))<CR>',
 	{ desc = "Underline" }
 )
+vim.keymap.set("n", "<leader>dd", ":%d<CR>", { desc = "Clear buffer" })
 
 -- Yank to / paste from register 't'
 vim.keymap.set({ "n", "v" }, "<leader>y", '"*y', { desc = "Yank to clipboard" })
@@ -46,6 +47,7 @@ vim.keymap.set("n", "<leader>ql", ":source .mks<CR>", { desc = "Load session if 
 vim.keymap.set("n", "<leader>wf", ":w<CR>", { desc = "Write current file" })
 vim.keymap.set("n", "<leader>ad", ":DiffviewOpen<CR>", { desc = "Diffview Open" })
 vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete to nil" })
+vim.keymap.set("n", "<leader>D", '"_D', { desc = "Delete to nil from current to EOL" })
 
 -- Eval in Lua
 vim.keymap.set("n", "<leader>el", ":.lua<CR>", { desc = "Eval one line in lua" })

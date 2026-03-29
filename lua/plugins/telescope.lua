@@ -100,7 +100,7 @@ return {
 		local builtin = require("telescope.builtin")
 
 		-- Find files
-		vim.keymap.set("n", "<leader>lk", function()
+		vim.keymap.set("n", "<leader>lj", function()
 			builtin.find_files(adjust_anchor(vert_comp))
 		end, { desc = "Find files" })
 
@@ -110,7 +110,7 @@ return {
 		end, { desc = "Live grep" })
 
 		-- Buffers
-		vim.keymap.set("n", "<leader>lj", function()
+		vim.keymap.set("n", "<leader>lk", function()
 			builtin.buffers(adjust_anchor(vert_comp))
 		end, { desc = "Find buffers" })
 
