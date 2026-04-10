@@ -1,5 +1,5 @@
 return {
-	"SmiteshP/nvim-navbuddy",
+	"ssVitaliy/nvim-navbuddy-smart-position",
 	dependencies = {
 		"SmiteshP/nvim-navic",
 		"MunifTanjim/nui.nvim",
@@ -14,6 +14,7 @@ return {
 				-- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
 				size = { height = "50%", width = "50%" }, -- Or table format example: { height = "40%", width = "100%"}
 				position = { row = "50%", col = "100%" }, -- Or table format example: { row = "100%", col = "0%"}
+				smart_position = true, --true - will depends on selected pane for a 2-pane vertical split workflow.
 				scrolloff = nil, -- scrolloff value within navbuddy window
 				sections = {
 					left = {
