@@ -3,43 +3,41 @@ return {
 	tag = "0.1.8",
 	dependencies = { "nvim-lua/plenary.nvim" },
 	config = function()
+		local telescope = require("telescope")
+		local builtin = require("telescope.builtin")
+		local actions = require("telescope.actions")
+		local layout_strategies = require("telescope.pickers.layout_strategies")
 
-		---=== Custom layout_strategie: merge prompt and result windows
-		--stylua: ignore
-		require("telescope.pickers.layout_strategies").vertical_compact = function(
-			picker, max_columns, max_lines, layout_config)
-
-			local layout =
-				require("telescope.pickers.layout_strategies").vertical(picker, max_columns, max_lines, layout_config)
+		---=== Custom layout_strategy: merge prompt and result windows ===---
+		layout_strategies.vertical_compact = function(picker, max_columns, max_lines, layout_config)
+			local layout = layout_strategies.vertical(picker, max_columns, max_lines, layout_config)
 			layout.results.line = layout.results.line - 1
 			layout.results.height = layout.results.height + 1
 			return layout
 		end
 
 		---=== Custom funcs ===---
-		-- if window x pos > 40% of width return true
+		-- if current window x pos > 40% of screen width, return true
 		local function is_right_side()
 			local win_id = vim.api.nvim_get_current_win()
 			local win_pos_x = vim.api.nvim_win_get_position(win_id)[2]
-			local total_width = vim.opt.columns:get()
-
-			if win_pos_x > total_width * 0.4 then
-				return true
-			else
-				return false
-			end
+			local total_width = vim.o.columns
+			return win_pos_x > total_width * 0.4
 		end
 
 		local function adjust_anchor(view)
+			local opts = vim.deepcopy(view)
+
 			if is_right_side() then
-				view.layout_config.anchor = "W"
+				opts.layout_config.anchor = "W"
 			else
-				view.layout_config.anchor = "E"
+				opts.layout_config.anchor = "E"
 			end
-			return view
+
+			return opts
 		end
 
-		require("telescope").setup({
+		telescope.setup({
 			defaults = {
 				vimgrep_arguments = {
 					"rg",
@@ -49,34 +47,48 @@ return {
 					"--line-number",
 					"--column",
 					"--smart-case",
-					-- "--glob=!.git/",
-					"--path-separator=/", -- Force rg to use forward slashes
+					"--path-separator=/",
 				},
 			},
 
 			pickers = {
 				live_grep = {
 					mappings = {
-						i = { ["<c-f>"] = require("telescope.actions").to_fuzzy_refine },
+						i = {
+							["<C-f>"] = actions.to_fuzzy_refine,
+						},
 					},
 				},
-				-- find_files = { theme = "dropdown" },
-				-- buffers = { theme = "dropdown" },
-				-- 	help_tags = { theme = "dropdown" },
+
+				find_files = {
+					find_command = { "rg", "--files", "--glob", "!.git/*" },
+				},
 			},
 		})
 
-		--=== fix win backslash problem for help files search
-		local original_help_tags = require("telescope.builtin").help_tags
+		--=== Fix Windows backslash problem for help tags search ===---
+		do
+			local original_help_tags = builtin.help_tags
 
-		require("telescope.builtin").help_tags = function(opts)
-			local orig_shellslash = vim.o.shellslash
-			vim.o.shellslash = false -- Temporarily disable for help tags
-			original_help_tags(opts)
-			vim.o.shellslash = orig_shellslash -- Restore original setting
+			builtin.help_tags = function(opts)
+				local orig_shellslash = vim.o.shellslash
+				vim.o.shellslash = false
+
+				local ok, result = xpcall(function()
+					return original_help_tags(opts)
+				end, debug.traceback)
+
+				vim.o.shellslash = orig_shellslash
+
+				if not ok then
+					error(result)
+				end
+
+				return result
+			end
 		end
 
-		--=== Themes ===--
+		--=== Themes ===---
 		local vert_comp = {
 			layout_strategy = "vertical_compact",
 			sorting_strategy = "ascending",
@@ -84,7 +96,7 @@ return {
 			layout_config = {
 				prompt_position = "top",
 				anchor = "E",
-				preview_cutoff = 1, -- Preview should always show (unless previewer = false)
+				preview_cutoff = 1,
 
 				width = function(_, max_columns, _)
 					return math.min(max_columns, 88)
@@ -96,99 +108,65 @@ return {
 			},
 		}
 
-		--=== Keys
-		local builtin = require("telescope.builtin")
+		--=== Keys ===---
 
 		-- Find files
-		vim.keymap.set("n", "<leader>lj", function()
+		vim.keymap.set("n", "<leader>ff", function()
 			builtin.find_files(adjust_anchor(vert_comp))
 		end, { desc = "Find files" })
 
 		-- Live grep
-		vim.keymap.set("n", "<leader>ll", function()
+		vim.keymap.set("n", "<leader>fg", function()
 			builtin.live_grep(adjust_anchor(vert_comp))
 		end, { desc = "Live grep" })
 
 		-- Buffers
-		vim.keymap.set("n", "<leader>lk", function()
+		vim.keymap.set("n", "<leader>fb", function()
 			builtin.buffers(adjust_anchor(vert_comp))
 		end, { desc = "Find buffers" })
 
 		-- Find help tags
-		vim.keymap.set("n", "<leader>lh", function()
+		vim.keymap.set("n", "<leader>fh", function()
 			builtin.help_tags(adjust_anchor(vert_comp))
 		end, { desc = "Find help" })
 
-		-- Noteman search
-		local noteman_opts = vim.tbl_deep_extend("force", vert_comp, { search_dirs = { "~/noteman" } })
+		-- Find config files
+		vim.keymap.set("n", "<leader>fc", function()
+			builtin.find_files(vim.tbl_deep_extend("force", adjust_anchor(vert_comp), {
+				cwd = vim.fn.stdpath("config"),
+			}))
+		end, { desc = "Find Neovim config files" })
 
-		vim.keymap.set("n", "<leader>ln", function()
-			builtin.live_grep(noteman_opts)
+		-- Noteman grep search
+		-- local Noteman = (project_root or cwd)/noteman
+		local function get_local_noteman_dir()
+			local cwd = vim.loop.cwd()
+
+			-- если используешь git → берём root проекта
+			local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+
+			if vim.v.shell_error == 0 and git_root ~= "" then
+				return git_root .. "/noteman"
+			end
+
+			-- fallback: просто cwd
+			return cwd .. "/noteman"
+		end
+
+		local noteman_opts = vim.tbl_deep_extend("force", vert_comp, {
+			search_dirs = { get_local_noteman_dir() },
+		})
+
+		local global_noteman_opts = vim.tbl_deep_extend("force", vert_comp, {
+			search_dirs = { vim.fn.expand("~/noteman") },
+		})
+
+		vim.keymap.set("n", "<leader>fn", function()
+			builtin.live_grep(adjust_anchor(noteman_opts))
 		end, { desc = "Noteman search" })
 
-		-- vim.keymap.set("n", "<leader>of", builtin.find_files, { desc = "Telescope find files" })
-		-- vim.keymap.set("n", "<leader>og", builtin.live_grep, { desc = "Telescope live grep" })
-		-- vim.keymap.set("n", "<leader>oo", builtin.buffers, { desc = "Telescope buffers" })
-		-- vim.keymap.set("n", "<leader>oh", builtin.help_tags, { desc = "Telescope help tags" })
+		vim.keymap.set("n", "<leader>fN", function()
+			builtin.live_grep(adjust_anchor(global_noteman_opts))
+		end, { desc = "Global Noteman search" })
 	end,
 }
---[[
-		--=== Themes ===--
-		local themes = require("telescope.themes")
-
-		local common_vert = {
-
-			results_title = false,
-			sorting_strategy = "ascending",
-			layout_strategy = "vertical_compact",
-			layout_config = {
-				prompt_position = "top",
-
-				anchor = "E",
-				preview_cutoff = 1, -- Preview should always show (unless previewer = false)
-
-				width = function(_, max_columns, _)
-					return math.min(max_columns, 88)
-				end,
-
-				height = function(_, _, max_lines)
-					return math.min(max_lines, 48)
-				end,
-			},
-		}
-
-		-- -- Dropdown theme (80% width)
-		-- local common_vert = themes.get_dropdown({
-		-- 	layout_strategy = "vertical",
-		-- 	layout_config = {
-		-- 		-- width = 0.7,
-		-- 		width = function(_, max_columns, _)
-		-- 			return math.min(max_columns, 88)
-		-- 		end,
-		-- 		height = 0.95,
-		-- 		preview_height = 0.6,
-		-- 		prompt_position = "top",
-		-- 		anchor = "E",
-		-- 	},
-		-- })
-
-		-- Vertical theme (narrow sidebar)
-		local my_vertical = themes.get_ivy({
-			layout_config = {
-				width = 0.4,
-				height = 0.9,
-				preview_cutoff = 40,
-			},
-		})
-
-		-- Horizontal theme (bottom panel)
-		local my_horizontal = themes.get_dropdown({
-			layout_strategy = "horizontal",
-			layout_config = {
-				width = 0.9,
-				height = 0.3,
-				prompt_position = "bottom",
-			},
-		})
-
---]]
